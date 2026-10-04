@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Travel Agency</title>
+    <meta
+      name="description"
+      content="Premium flights, curated escapes, and boutique stays designed for modern explorers."
+    />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="navbar container" aria-label="Main navigation">
+        <a href="#top" class="brand" aria-label="Aether Travel home">
+          <img
+            src="images/ei_1791017456366-removebg-preview.png"
+            alt="Aether Travel logo"
+            class="brand-logo"
+          />
+          <span>Aether Travel</span>
+        </a>
+
+        <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span>
+          <span></span>
+        </button>
+
+        <div class="nav-menu">
+          <ul class="nav-links">
+            <li><a href="#destinations">Destinations</a></li>
+            <li><a href="#packages">Packages</a></li>
+            <li><a href="#popular">Popular</a></li>
+            <li><a href="#booking">Booking</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+          </ul>
+          <a href="plan-your-trip.html" class="btn btn-primary nav-cta">Plan Your Trip</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" id="hero_container">
+        <div class="container hero-shell">
+          <div class="hero-copy">
+            <p class="eyebrow">Ready take-off</p>
+            <h1>Convenient online flight booking services.</h1>
+            <p class="lead">
+              Curated getaways, elevated stays, and seamless routes crafted for modern explorers.
+            </p>
+            <div class="hero-actions">
+              <a href="#booking" class="btn btn-primary">Book now</a>
+              <a href="#destinations" class="btn btn-secondary">Explore trips</a>
+            </div>
+            <ul class="hero-metrics" aria-label="Travel metrics">
+              <li>
+                <strong class="stat-number" data-target="4.9" data-suffix="/5">0</strong>
+                <span>Traveler rating</span>
+              </li>
+              <li>
+                <strong class="stat-number" data-target="120" data-suffix="+">0</strong>
+                <span>Destinations</span>
+              </li>
+              <li>
+                <strong class="stat-number" data-target="24" data-suffix="/7">0</strong>
+                <span>Support</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="hero-visual" aria-label="Featured destination image">
+            <img
+              src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
+              alt="Coastal destination with turquoise waters and cliffs"
+            />
+            <div class="floating-card">
+              <span class="floating-label">Featured journey</span>
+              <strong>Amalfi Coast</strong>
+              <small>From $1,280</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="container booking-panel" aria-label="Flight search form">
+          <div class="booking-tabs" role="tablist" aria-label="Trip type">
+            <button class="is-active" type="button">One Way</button>
+            <button type="button">Round Trip</button>
+            <button type="button">Multi City</button>
+          </div>
+
+          <form class="booking-form" action="#" method="get">
+            <div class="field">
+              <label for="from_location">From</label>
+              <select name="from_location" id="from_location">
+                <option value="">Select</option>
+                <option value="tokyo">Tokyo, Japan</option>
+                <option value="dubai">Dubai, UAE</option>
+                <option value="london">London, UK</option>
+              </select>
+            </div>
+
+            <div class="swap-wrap">
+              <button class="swap-button" type="button" aria-label="Swap locations">⇄</button>
+            </div>
+
+            <div class="field">
+              <label for="to_location">To</label>
+              <select name="to_location" id="to_location">
+                <option value="">Select</option>
+                <option value="berlin">Berlin, Germany</option>
+                <option value="sydney">Sydney, Australia</option>
+                <option value="singapore">Singapore</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="from_date">Departure</label>
+              <select name="from_date" id="from_date">
+                <option value="">Select</option>
+                <option value="2026-10-11">Oct 11, 2026</option>
+                <option value="2026-11-03">Nov 03, 2026</option>
+                <option value="2026-12-12">Dec 12, 2026</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="return_date">Return</label>
+              <select name="return_date" id="return_date">
+                <option value="">Select</option>
+                <option value="2026-12-15">Dec 15, 2026</option>
+                <option value="2026-12-28">Dec 28, 2026</option>
+                <option value="2027-01-09">Jan 09, 2027</option>
+              </select>
+            </div>
+
+            <button class="btn btn-primary search-button" type="submit">Search</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="section section-light" id="destinations">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow eyebrow-dark">Top flight deals</p>
+            <h2>Handpicked escapes for unforgettable journeys.</h2>
+            <p>
+              Discover premium routes, slow luxury, and moments designed to linger long after takeoff.
+            </p>
+          </div>
+
+          <div class="destination-grid">
+            <article class="destination-card featured">
+              <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=800&q=80" alt="Mountain lake getaway" />
+              <div class="destination-info">
+                <span class="country-tag">Switzerland</span>
+                <h3>Alpine serenity</h3>
+                <div class="meta-row">
+                  <span>6 nights</span>
+                  <strong>$1,340</strong>
+                </div>
+              </div>
+            </article>
+
+            <article class="destination-card">
+              <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80" alt="Forest and lake mountain view" />
+              <div class="destination-info">
+                <span class="country-tag">Canada</span>
+                <h3>Remote wilderness</h3>
+                <div class="meta-row">
+                  <span>5 nights</span>
+                  <strong>$1,140</strong>
+                </div>
+              </div>
+            </article>
+
+            <article class="destination-card">
+              <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80" alt="Paris street and architecture" />
+              <div class="destination-info">
+                <span class="country-tag">France</span>
+                <h3>Paris in bloom</h3>
+                <div class="meta-row">
+                  <span>4 nights</span>
+                  <strong>$980</strong>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="packages">
+        <div class="container">
+          <div class="section-heading align-left">
+            <p class="eyebrow eyebrow-dark">Best packages</p>
+            <h2>Signature experiences tailored to your pace.</h2>
+          </div>
+
+          <div class="package-grid">
+            <article class="package-card">
+              <div class="package-image package-image-one"></div>
+              <div class="package-body">
+                <div class="price-row">
+                  <span>Seaside escape</span>
+                  <strong>$2,480</strong>
+                </div>
+                <h3>Greek island retreat</h3>
+                <ul>
+                  <li>Flights + boutique stay</li>
+                  <li>Airport transfers</li>
+                  <li>Sunset sailing</li>
+                </ul>
+                <a href="#booking" class="text-link"><span class="text-link-icon">✈</span>Book this trip</a>
+              </div>
+            </article>
+
+            <article class="package-card highlight-card">
+              <div class="package-image package-image-two"></div>
+              <div class="package-body">
+                <div class="price-row">
+                  <span>Adventure route</span>
+                  <strong>$3,220</strong>
+                </div>
+                <h3>Patagonia escape</h3>
+                <ul>
+                  <li>Guided hiking</li>
+                  <li>Premium lodge</li>
+                  <li>All transfers included</li>
+                </ul>
+                <a href="#booking" class="text-link"><span class="text-link-icon">✈</span>Book this trip</a>
+              </div>
+            </article>
+
+            <article class="package-card">
+              <div class="package-image package-image-three"></div>
+              <div class="package-body">
+                <div class="price-row">
+                  <span>Culture trail</span>
+                  <strong>$2,960</strong>
+                </div>
+                <h3>Kyoto & Tokyo</h3>
+                <ul>
+                  <li>Rail passes</li>
+                  <li>Private guide</li>
+                  <li>Wellness stay</li>
+                </ul>
+                <a href="#booking" class="text-link"><span class="text-link-icon">✈</span>Book this trip</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-light" id="popular">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow eyebrow-dark">Most popular airlines</p>
+            <h2>Trusted travel partners for every leg of your journey.</h2>
+          </div>
+
+          <div class="airline-carousel" aria-label="Popular airlines">
+            <div class="airline-card">
+              <span class="airline-logo airline-one" aria-label="Qantas logo">
+                <img src="src/qantas.png" alt="Qantas logo" />
+              </span>
+              <strong>Qantas</strong>
+              <small>Australia</small>
+            </div>
+            <div class="airline-card">
+              <span class="airline-logo airline-two" aria-label="Singapore Airlines logo">
+                <img src="src/singapore_airlines.png" alt="Singapore Airlines logo" />
+              </span>
+              <strong>Singapore.</strong>
+              <small>Airlines</small>
+            </div>
+            <div class="airline-card">
+              <span class="airline-logo airline-three" aria-label="Emirates logo">
+                <img src="src/emirates.png" alt="Emirates logo" />
+              </span>
+              <strong>Emirates</strong>
+              <small>Dubai</small>
+            </div>
+            <div class="airline-card">
+              <span class="airline-logo airline-four" aria-label="Delta logo">
+                <img src="src/Delta_airlines.png" alt="Delta Airlines logo" />
+              </span>
+              <strong>Delta</strong>
+              <small>United States</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section booking-section" id="booking">
+        <div class="container booking-layout">
+          <div class="booking-visual">
+            <div class="booking-visual-card">
+              <img
+                src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80"
+                alt="Luxury hotel pool overlooking a scenic resort"
+              />
+            </div>
+            <div class="mini-card">
+              <span>Hotel</span>
+              <strong>Azure Bay Suites</strong>
+              <small>4.8 rating · 5 nights</small>
+            </div>
+          </div>
+
+          <div class="booking-copy">
+            <p class="eyebrow eyebrow-dark">Book your hotel</p>
+            <h2>Stay somewhere unforgettable.</h2>
+            <p>
+              Pair your flights with elevated stays that bring calm, comfort, and character to every destination.
+            </p>
+            <ul class="check-list">
+              <li>Handpicked boutique hotels</li>
+              <li>Flexible cancellation options</li>
+              <li>Concierge travel support</li>
+            </ul>
+            <a href="#cta" class="btn btn-primary">Reserve stay</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="why-us">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow eyebrow-dark">Why choose us</p>
+            <h2>Thoughtful travel, without the friction.</h2>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card">
+              <span class="feature-icon">01</span>
+              <h3>Premium planning</h3>
+              <p>Every itinerary balances value, comfort, and memorable destination moments.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-icon">02</span>
+              <h3>Transparent pricing</h3>
+              <p>No hidden fees, no confusing extras—just clear rates and curated options.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-icon">03</span>
+              <h3>Concierge care</h3>
+              <p>Friendly specialists support your travel before, during, and after departure.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section-light" id="testimonials">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow eyebrow-dark">Traveler stories</p>
+            <h2>Clients return for the ease and enchantment.</h2>
+          </div>
+
+          <div class="testimonial-grid">
+            <article class="testimonial-card">
+              <p>
+                “A seamless journey from booking to arrival. Every detail felt polished and intentionally designed.”
+              </p>
+              <div class="person">
+                <strong>Amelia R.</strong>
+                <span>Paris getaway</span>
+              </div>
+            </article>
+
+            <article class="testimonial-card active">
+              <p>
+                “We booked a multi-stop itinerary and it felt effortless. The recommendations were excellent.”
+              </p>
+              <div class="person">
+                <strong>Daniel K.</strong>
+                <span>Tokyo & Kyoto</span>
+              </div>
+            </article>
+
+            <article class="testimonial-card">
+              <p>
+                “The hotel pairing was perfection, and the support team answered every question quickly.”
+              </p>
+              <div class="person">
+                <strong>Priya S.</strong>
+                <span>Bali escape</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-banner" id="cta">
+        <div class="container cta-inner">
+          <div>
+            <p class="eyebrow">Plan your next chapter</p>
+            <h2>Ready for a destination that changes how you travel?</h2>
+          </div>
+          <a href="#booking" class="btn btn-primary">Book your escape</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <a href="#top" class="brand brand-footer">
+            <img
+              src="images/ei_1791017456366-removebg-preview.png"
+              alt="Aether Travel logo"
+              class="brand-logo"
+            />
+            <span>Aether Travel</span>
+          </a>
+          <p>Luxury journeys designed for discovery, comfort, and joy.</p>
+        </div>
+
+        <div class="footer-links">
+          <div>
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#destinations">Destinations</a></li>
+              <li><a href="#packages">Packages</a></li>
+              <li><a href="#popular">Airlines</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Support</h4>
+            <ul>
+              <li><a href="#booking">Hotels</a></li>
+              <li><a href="#why-us">Why us</a></li>
+              <li><a href="#testimonials">Reviews</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <span>© <span id="year">2026</span> Aether Travel</span>
+        <span>Privacy · Terms</span>
+      </div>
+    </footer>
+
+    <script src="index.js"></script>
+  </body>
+</html>
+
+

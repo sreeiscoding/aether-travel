@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Plan Your Trip — Aether Travel</title>
+    <meta name="description" content="Plan a premium trip with Aether Travel — multi-step itinerary request." />
+    <link rel="stylesheet" href="index.css" />
+    <style>
+      /* Page-specific small adjustments reusing design tokens from index.css */
+      :root { --planner-max: 980px; }
+      .planner-hero {
+        padding: 3.2rem 1rem;
+        background: linear-gradient(180deg, rgba(17,25,23,0.04), rgba(244,239,231,0.65));
+      }
+      .planner-shell { max-width: var(--planner-max); margin: 0 auto; }
+      .planner-card {
+        background: rgba(255,255,255,0.88);
+        border-radius: 16px;
+        padding: 1.2rem;
+        box-shadow: var(--shadow);
+      }
+      .planner-steps { display: grid; gap: 1rem; }
+      .step-indicator { display:flex; gap:0.75rem; align-items:center; margin-bottom:0.5rem; }
+      .step-dot { width:34px; height:34px; border-radius:999px; display:grid; place-items:center; font-weight:800; background:rgba(29,35,33,0.06); }
+      .step-dot.is-active { background: linear-gradient(135deg,var(--green),var(--blue)); color:#fff; }
+      .progress-wrap { height:6px; background:rgba(29,35,33,0.06); border-radius:999px; overflow:hidden; }
+      .progress-bar { height:100%; width:0%; background:linear-gradient(90deg,var(--green),var(--blue)); transition:width .35s ease; }
+      .steps { position:relative; }
+      .step { display:none; }
+      .step.active { display:block; animation:fadeIn .36s ease; }
+      @keyframes fadeIn { from {opacity:0; transform:translateY(6px);} to {opacity:1; transform:none;} }
+      .dest-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:0.9rem; }
+      .dest-card { border-radius:12px; overflow:hidden; background:#eee; position:relative; cursor:pointer; min-height:110px; display:flex; flex-direction:column; justify-content:flex-end; padding:0.8rem; color:#fff; }
+      .dest-card small { opacity:0.9; }
+      .pref-grid { display:flex; flex-wrap:wrap; gap:0.6rem; }
+      /* Preference pills with color accents applied only when selected */
+      .pref {
+        position:relative;
+        padding:0.6rem 0.9rem;
+        border-radius:999px;
+        background:rgba(29,35,33,0.04);
+        cursor:pointer;
+        font-weight:700;
+        color:var(--text);
+        transition: transform .14s ease, box-shadow .14s ease, background .18s ease, color .18s ease;
+        box-shadow: 0 6px 18px rgba(12,20,18,0.04);
+      }
+      .pref:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(12,20,18,0.08); }
+      /* colored states applied when selected */
+      .pref.is-selected[data-value="Adventure"] { background: linear-gradient(135deg,#ff9a76,#ff6b6b); color:#fff; }
+      .pref.is-selected[data-value="Relaxation"] { background: linear-gradient(135deg,#9be7d9,#6bd3c9); color:#073b35; }
+      .pref.is-selected[data-value="Family"] { background: linear-gradient(135deg,#ffd69e,#ffb36b); color:#2b1a00; }
+      .pref.is-selected[data-value="Honeymoon"] { background: linear-gradient(135deg,#f6c1e3,#f08abf); color:#3b122b; }
+      .pref.is-selected[data-value="Luxury"] { background: linear-gradient(135deg,#d3c6ff,#b49bff); color:#24124a; }
+      .pref.is-selected[data-value="Cultural"] { background: linear-gradient(135deg,#ffd7a6,#ffc371); color:#402500; }
+      .pref.is-selected[data-value="Nature"] { background: linear-gradient(135deg,#b6e3a6,#80d07a); color:#123814; }
+      .pref.is-selected[data-value="Solo"] { background: linear-gradient(135deg,#b8d8ff,#8db6ff); color:#08234a; }
+      .pref.is-selected { box-shadow: 0 18px 36px rgba(12,20,18,0.12); }
+      /* Slightly smaller pills on small screens */
+      @media (max-width:420px){ .pref{padding-left:2.2rem;font-size:0.95rem;} }
+      .form-row { display:grid; gap:0.6rem; grid-template-columns:1fr 1fr; }
+      @media (max-width:720px){ .form-row{grid-template-columns:1fr;} .step-dot{width:28px;height:28px} }
+      .summary { background:linear-gradient(180deg, rgba(244,239,231,0.6), #fff); padding:1rem; border-radius:10px; }
+      .muted-small { color:var(--muted); font-size:0.9rem; }
+
+      /* Premium form controls for planner */
+      .planner-card label { display:block; margin-bottom:0.35rem; color:var(--muted); font-weight:700; font-size:0.95rem; }
+
+      .planner-card input,
+      .planner-card select,
+      .planner-card textarea {
+        width:100%;
+        padding:0.72rem 0.95rem;
+        border-radius:12px;
+        border:1px solid rgba(29,35,33,0.06);
+        background:linear-gradient(180deg, rgba(255,255,255,0.72), rgba(245,243,240,0.62));
+        backdrop-filter: blur(6px);
+        box-shadow: 0 8px 24px rgba(12,20,18,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
+        font-weight:700;
+        color:var(--text);
+        transition: box-shadow .18s ease, transform .08s ease, border-color .18s ease;
+        outline: none;
+        margin-bottom:0.9rem;
+      }
+
+      .planner-card input::placeholder,
+      .planner-card textarea::placeholder { color: rgba(29,35,33,0.36); font-weight:500; }
+
+      .planner-card input:focus,
+      .planner-card textarea:focus,
+      .planner-card select:focus {
+        border-color: rgba(47,77,64,0.35);
+        box-shadow: 0 14px 38px rgba(47,77,64,0.08), 0 0 0 6px rgba(98,123,109,0.06);
+        transform: translateY(-2px);
+      }
+
+      .planner-card select { appearance:none; -webkit-appearance:none; -moz-appearance:none; background-image: linear-gradient(45deg, transparent 50%, rgba(29,35,33,0.08) 50%); background-position: calc(100% - 1.1rem) 50%; background-size:12px 12px; padding-right:2.4rem; }
+
+      .planner-card textarea { min-height:120px; resize:vertical; }
+
+      .planner-card .field-error { margin-top:-0.6rem; display:block; font-size:0.88rem; color:crimson; }
+
+      /* Destination cards: elevated, desaturated overlay and hover lift */
+      .dest-card { border-radius:12px; overflow:hidden; position:relative; min-height:120px; display:flex; flex-direction:column; justify-content:flex-end; padding:0.8rem; color:#fff; box-shadow: 0 10px 30px rgba(12,20,18,0.06); transition: transform .18s ease, box-shadow .18s ease; }
+      .dest-card::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.32) 80%); mix-blend-mode:multiply; }
+      .dest-card > div { position:relative; z-index:2; }
+      .dest-card:hover { transform:translateY(-6px); box-shadow: 0 20px 46px rgba(12,20,18,0.12); }
+      /* Number control styles */
+      .number-control { display:inline-flex; align-items:center; gap:0.5rem; background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,248,246,0.9)); border-radius:12px; padding:6px; border:1px solid rgba(29,35,33,0.04); }
+      .number-control input { width:64px; text-align:center; border:0; background:transparent; padding:0.45rem 0.5rem; font-weight:800; }
+      /* remove native browser spinner arrows */
+      .number-control input::-webkit-outer-spin-button,
+      .number-control input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+      .number-control input { -moz-appearance: textfield; }
+
+      /* Tactile plus/minus design */
+      .num-btn {
+        width:44px;
+        height:44px;
+        display:inline-grid;
+        place-items:center;
+        border-radius:12px;
+        border:1px solid transparent;
+        background: #fff;
+        font-weight:800;
+        font-size:18px;
+        line-height:1;
+        cursor:pointer;
+        transition: transform .12s ease, box-shadow .12s ease, background .12s ease, border-color .12s ease;
+        box-shadow: 0 6px 18px rgba(12,20,18,0.06);
+      }
+      .num-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(12,20,18,0.09); }
+      .num-btn:active { transform: translateY(-1px); }
+
+      /* Decrease: subtle, ghost-style */
+      .num-decrease {
+        color: #4f5a57;
+        background: linear-gradient(180deg, rgba(250,250,250,1), rgba(244,244,244,1));
+        border:1px solid rgba(29,35,33,0.04);
+      }
+
+      /* Increase: prominent primary action */
+      .num-increase {
+        color: #fff;
+        background: linear-gradient(135deg, var(--green), var(--blue));
+        border:1px solid rgba(47,77,64,0.12);
+        box-shadow: 0 10px 26px rgba(47,77,64,0.08);
+      }
+
+      /* Focus styles for accessibility */
+      .num-btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(98,123,109,0.09), 0 12px 30px rgba(12,20,18,0.08);
+        transform: translateY(-2px);
+      }
+
+      /* Slightly larger symbols for clarity */
+      .num-btn { font-size:20px; }
+
+      /* screen-reader only helper */
+      .sr-only { position: absolute !important; height: 1px; width: 1px; overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap; border: 0; padding: 0; margin: -1px; }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="navbar container" aria-label="Main navigation">
+        <a href="index.html" class="brand" aria-label="Aether Travel home">
+          <img src="images/ei_1791017456366-removebg-preview.png" alt="Aether Travel logo" class="brand-logo" />
+          <span>Aether Travel</span>
+        </a>
+        <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false"><span></span><span></span></button>
+        <div class="nav-menu">
+          <ul class="nav-links">
+            <li><a href="index.html#destinations">Destinations</a></li>
+            <li><a href="index.html#packages">Packages</a></li>
+            <li><a href="index.html#popular">Popular</a></li>
+            <li><a href="index.html#booking">Booking</a></li>
+            <li><a href="index.html#testimonials">Reviews</a></li>
+          </ul>
+          <a href="plan-your-trip.html" class="btn btn-primary nav-cta">Plan Your Trip</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="planner-hero">
+        <div class="planner-shell container">
+          <div class="planner-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
+              <div>
+                <p class="eyebrow">Plan your trip</p>
+                <h1 style="margin:0 0 0.25rem;">Tell us where your journey begins</h1>
+                <p class="muted-small">A tailored itinerary request — we’ll curate a premium trip and send a proposed plan.</p>
+              </div>
+              <div style="min-width:220px;text-align:right;">
+                <small class="muted-small">Estimated time</small>
+                <div style="font-weight:800;font-size:1.05rem;">~ 3 minutes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container planner-shell" style="margin-top:1.4rem;">
+        <form id="tripForm" class="planner-card" novalidate>
+
+          <div class="step-indicator">
+            <div class="step-dot is-active" data-step="1">1</div>
+            <div class="step-dot" data-step="2">2</div>
+            <div class="step-dot" data-step="3">3</div>
+            <div class="step-dot" data-step="4">4</div>
+            <div style="margin-left:auto;text-align:right;">
+              <div class="progress-wrap" aria-hidden="true" style="width:220px;">
+                <div class="progress-bar" id="progressBar" style="width:0%"></div>
+              </div>
+              <small class="muted-small">Step <span id="currentStep">1</span> of 5</small>
+            </div>
+          </div>
+
+          <div class="steps">
+            <!-- Step 1: Destination -->
+            <div class="step active" data-step="1">
+              <h3>Destination</h3>
+              <p class="muted-small">Where would you like to go? Choose a preferred destination and optionally an alternative.</p>
+
+              <label for="primaryDestination" class="muted-small">Preferred destination <span aria-hidden="true">*</span></label>
+              <input id="primaryDestination" name="primaryDestination" required placeholder="City, country or region" />
+
+              <label for="altDestination" class="muted-small">Alternative destination (optional)</label>
+              <input id="altDestination" name="altDestination" placeholder="City, country or region" />
+
+              <p style="margin:0.8rem 0 0.4rem;font-weight:800;">Suggestions</p>
+              <div class="dest-grid" id="suggestions">
+                <div class="dest-card" data-value="Amalfi Coast" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60');background-size:cover;">
+                  <div><strong>Amalfi Coast</strong><small>Italy</small></div>
+                </div>
+                <div class="dest-card" data-value="Patagonia" style="background-image:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=60');background-size:cover;">
+                  <div><strong>Patagonia</strong><small>Chile</small></div>
+                </div>
+                <div class="dest-card" data-value="Kyoto" style="background-image:url('https://images.unsplash.com/photo-1549692520-acc6669e2f0c?auto=format&fit=crop&w=800&q=60');background-size:cover;">
+                  <div><strong>Kyoto</strong><small>Japan</small></div>
+                </div>
+                <div class="dest-card" data-value="Maldives" style="background-image:url('https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=800&q=60');background-size:cover;">
+                  <div><strong>Maldives</strong><small>Maldives</small></div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Step 2: Journey details -->
+            <div class="step" data-step="2">
+              <h3>Journey details</h3>
+              <p class="muted-small">Tell us when you want to travel and who is in your party.</p>
+
+              <div class="form-row">
+                <div>
+                  <label for="departDate" class="muted-small">Departure date <span aria-hidden="true">*</span></label>
+                  <input id="departDate" name="departDate" type="date" required />
+                </div>
+                <div>
+                  <label for="returnDate" class="muted-small">Return date</label>
+                  <input id="returnDate" name="returnDate" type="date" />
+                </div>
+              </div>
+
+              <div style="height:0.6rem"></div>
+
+              <div class="form-row">
+                <div>
+                  <label for="adults" class="muted-small">Adults</label>
+                  <div class="number-control">
+                    <button type="button" class="num-btn num-decrease" data-for="adults" aria-label="Decrease adults">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                        <rect x="4" y="11" width="16" height="2" rx="1" fill="currentColor" />
+                      </svg>
+                    </button>
+                    <input id="adults" name="adults" type="number" step="1" min="1" value="2" aria-live="polite" />
+                    <button type="button" class="num-btn num-increase" data-for="adults" aria-label="Increase adults">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                        <rect x="11" y="4" width="2" height="16" rx="1" fill="currentColor" />
+                        <rect x="4" y="11" width="16" height="2" rx="1" fill="currentColor" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label for="children" class="muted-small">Children</label>
+                  <div class="number-control">
+                    <button type="button" class="num-btn num-decrease" data-for="children" aria-label="Decrease children">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                        <rect x="4" y="11" width="16" height="2" rx="1" fill="currentColor" />
+                      </svg>
+                    </button>
+                    <input id="children" name="children" type="number" step="1" min="0" value="0" aria-live="polite" />
+                    <button type="button" class="num-btn num-increase" data-for="children" aria-label="Increase children">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                        <rect x="11" y="4" width="2" height="16" rx="1" fill="currentColor" />
+                        <rect x="4" y="11" width="16" height="2" rx="1" fill="currentColor" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: Preferences -->
+            <div class="step" data-step="3">
+              <h3>Travel preferences</h3>
+              <p class="muted-small">Select one or more styles that match your ideal trip.</p>
+              <div class="pref-grid" id="preferences">
+                <div class="pref" data-value="Adventure">Adventure</div>
+                <div class="pref" data-value="Relaxation">Relaxation</div>
+                <div class="pref" data-value="Family">Family</div>
+                <div class="pref" data-value="Honeymoon">Honeymoon</div>
+                <div class="pref" data-value="Luxury">Luxury</div>
+                <div class="pref" data-value="Cultural">Cultural</div>
+                <div class="pref" data-value="Nature">Nature</div>
+                <div class="pref" data-value="Solo">Solo</div>
+              </div>
+            </div>
+
+            <!-- Step 4: Contact & Notes (Budget step in brief) -->
+            <div class="step" data-step="4">
+              <h3>Contact & budget</h3>
+              <p class="muted-small">We’ll use this to send your itinerary proposal.</p>
+
+              <label for="fullName" class="muted-small">Full name <span aria-hidden="true">*</span></label>
+              <input id="fullName" name="fullName" required />
+
+              <label for="email" class="muted-small">Email <span aria-hidden="true">*</span></label>
+              <input id="email" name="email" type="email" required />
+
+              <label for="phone" class="muted-small">Phone / WhatsApp</label>
+              <input id="phone" name="phone" type="tel" />
+
+              <label for="notes" class="muted-small">Additional requirements or notes</label>
+              <textarea id="notes" name="notes" rows="4" placeholder="Dietary needs, mobility, celebrations, special requests..."></textarea>
+            </div>
+
+            <!-- Step 5: Review & submit -->
+            <div class="step" data-step="5">
+              <h3>Review your request</h3>
+              <p class="muted-small">Confirm the details below before requesting your itinerary.</p>
+
+              <div class="summary" id="summaryBox">
+                <!-- summary content injected here -->
+              </div>
+
+            </div>
+
+          </div>
+
+          <div id="actionToolbar" style="display:flex;justify-content:space-between;gap:0.8rem;margin-top:1rem;">
+            <button type="button" class="btn" id="prevBtn" disabled>Previous</button>
+            <div style="display:flex;gap:0.6rem;">
+              <button type="button" class="btn" id="saveDraftBtn">Save draft</button>
+              <button type="button" class="btn btn-primary" id="nextBtn">Next</button>
+            </div>
+          </div>
+
+          <div style="margin-top:0.4rem;display:flex;align-items:center;gap:0.6rem;">
+            <div id="autosaveStatus" class="muted-small" aria-live="polite"></div>
+          </div>
+
+          <!-- aria-live region for announcing numeric changes to assistive tech -->
+          <div id="srLive" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+        </form>
+      </section>
+
+    </main>
+
+    <footer class="site-footer" style="margin-top:2rem;">
+      <div class="container footer-inner">
+        <div>
+          <a href="index.html" class="brand brand-footer">
+            <img src="images/ei_1791017456366-removebg-preview.png" alt="Aether Travel logo" class="brand-logo" />
+            <span>Aether Travel</span>
+          </a>
+          <p>Luxury journeys designed for discovery, comfort, and joy.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="index.js"></script>
+    <script src="plan-your-trip.js"></script>
+  </body>
+</html>
