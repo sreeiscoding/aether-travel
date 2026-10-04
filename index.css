@@ -374,16 +374,27 @@ button {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem 2rem;
-  padding-top: 0.8rem;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.3rem 0.4rem;
+  margin: 0 0 1.2rem;
+  width: fit-content;
+  max-width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  backdrop-filter: blur(10px);
 }
 
 .hero-metrics li {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  min-width: 130px;
-  flex: 1 1 140px;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  padding: 0.45rem 0.8rem 0.45rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .metric-top {
@@ -436,11 +447,13 @@ button {
 @media (max-width: 760px) {
   .hero-metrics {
     gap: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
   }
 
   .hero-metrics li {
     min-width: 0;
     flex: 1 1 30%;
+    padding-bottom: 0.3rem;
   }
 
   .metric-icon {
